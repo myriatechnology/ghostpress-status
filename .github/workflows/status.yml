@@ -1,0 +1,39 @@
+name: status
+
+# Every five minutes (GitHub may start a scheduled run some minutes late), on every push
+# (an incident posted in incidents.json shows at once) and by hand.
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: status
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe and render
+        run: python3 probe.py
+        env:
+          STATUS_URL: ${{ vars.STATUS_URL }}
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v4
