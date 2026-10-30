@@ -20,7 +20,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT / "site"
-PAGE_URL = (os.environ.get("STATUS_URL") or "https://myriatechnology.github.io/ghostpress-status").rstrip("/")
+PAGE_URL = (os.environ.get("STATUS_URL") or "https://status.ghostpress.app").rstrip("/")
 APP = "https://a.ghostpress.app"
 SITE = "https://ghostpress.app"
 DAYS = 90

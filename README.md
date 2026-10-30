@@ -1,7 +1,7 @@
 # GhostPress status
 
-The public status page for GhostPress: https://myriatechnology.github.io/ghostpress-status/
-(https://status.ghostpress.app once its DNS record is in place).
+The public status page for GhostPress: https://status.ghostpress.app
+(https://myriatechnology.github.io/ghostpress-status/ redirects there).
 
 Every five minutes `.github/workflows/status.yml` runs `probe.py` on a GitHub runner, outside
 GhostPress's own Azure environment, and deploys the page to GitHub Pages. GitHub may start a
@@ -54,8 +54,7 @@ GitHub turns off scheduled workflows in a public repository after 60 days withou
 
 ## Custom domain
 
-1. In the Microsoft 365 admin center (ghostpress.app DNS): CNAME `status` → `myriatechnology.github.io`.
-2. Repository Settings › Pages › Custom domain: `status.ghostpress.app`, then Enforce HTTPS
-   once the certificate is issued.
-3. Set the repository variable `STATUS_URL` to `https://status.ghostpress.app`, and
-   `STATUS_PAGE_URL` on the GhostPress web app to the same address.
+`status.ghostpress.app` is a CNAME to `myriatechnology.github.io` in the Microsoft 365 admin
+center (ghostpress.app DNS), set as the custom domain under Settings › Pages with HTTPS
+enforced. The repository variable `STATUS_URL` names it, and so does `STATUS_PAGE_URL` on the
+GhostPress web app.
