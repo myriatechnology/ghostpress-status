@@ -24,7 +24,7 @@ jobs:
     timeout-minutes: 5
     environment:
       name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
+      url: ${{ steps.deploy.outputs.page_url || steps.deploy_retry.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - name: Probe and render
@@ -35,5 +35,15 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
+      # GitHub sometimes cannot find the artifact the step above has just uploaded ("No
+      # artifacts named github-pages were found"): a delay on its side, not a failed check.
+      # The history lives in the deployed status.json, so a missed deploy loses this run's
+      # sample; wait and try once more before letting the run fail.
       - id: deploy
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+      - if: steps.deploy.outcome == 'failure'
+        run: sleep 30
+      - id: deploy_retry
+        if: steps.deploy.outcome == 'failure'
         uses: actions/deploy-pages@v4
